@@ -75,6 +75,15 @@ def test_public_is_lowercased_bool(lco):
                               get_query_payload=True)['public'] == 'false'
 
 
+def test_processed_is_lowercased_bool(lco):
+    assert lco.query_criteria(processed=True,
+                              get_query_payload=True) == {'processed': 'true'}
+    # Unlike empty_target_name, False is a choice rather than an absent flag:
+    # it selects the raw frames, so it has to be sent.
+    assert lco.query_criteria(processed=False,
+                              get_query_payload=True) == {'processed': 'false'}
+
+
 def test_exposure_time_quantity_becomes_seconds(lco):
     payload = lco.query_criteria(exposure_time=2*u.min, get_query_payload=True)
     assert payload['exposure_time'] == 120.0

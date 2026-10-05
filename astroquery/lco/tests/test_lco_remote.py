@@ -115,6 +115,18 @@ class TestLcoArchive:
         assert set(result['configuration_type']) == {'BIAS'}
         assert set(result['reduction_level']) == {0}
 
+    def test_processed_selects_reduced_or_raw_frames(self):
+        # This night at lsc holds both raw and reduced frames.
+        reduced = LcoArchive.query_criteria(site_id='lsc', processed=True,
+                                            public=True, row_limit=10,
+                                            **BIAS_WINDOW)
+        raw = LcoArchive.query_criteria(site_id='lsc', processed=False,
+                                        public=True, row_limit=10,
+                                        **BIAS_WINDOW)
+        assert len(reduced) > 0 and len(raw) > 0
+        assert 0 not in set(reduced['reduction_level'])
+        assert set(raw['reduction_level']) == {0}
+
     def test_dates_are_within_the_requested_window(self):
         result = LcoArchive.query_criteria(site_id='lsc',
                                            configuration_type='BIAS',

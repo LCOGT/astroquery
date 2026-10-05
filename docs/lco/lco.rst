@@ -132,6 +132,18 @@ most reduced data. There are several other more obscure reduction levels
 defined in the
 `Archive Documentation <https://lco.global/documentation/archive-documentation/>`_.
 
+To select on processing state rather than one specific level, pass
+``processed=True`` for frames at any reduced level, or ``processed=False`` for
+raw frames only. Leaving it out returns both:
+
+.. doctest-remote-data::
+
+    >>> frames = LcoArchive.query_criteria(site_id="lsc", processed=True,
+    ...                                    start="2024-03-02",
+    ...                                    end="2024-03-03")   # doctest: +IGNORE_WARNINGS
+    >>> set(frames["reduction_level"].tolist())
+    {91}
+
 Two criteria accept several values at once,
 ``include_configuration_type`` and ``exclude_configuration_type``:
 

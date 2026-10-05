@@ -49,6 +49,7 @@ FRAME_FILTERS = (
     'intersects',
     'observation_id',
     'primary_optical_element',
+    'processed',
     'proposal_id',
     'public',
     'reduction_level',
@@ -345,10 +346,14 @@ class LcoArchiveClass(QueryWithLogin):
             ``exposure_time``
                 Seconds, either as a number or an
                 `~astropy.units.Quantity` that can be converted to seconds.
+            ``processed``
+                `True` matches all processed reduced data frames, `False` matches
+                only raw data frames. When left out, both frame types are returned.
             ``public``
                 `True` allows selection to include public frames, `False` only
                 returns frames from proposals which your account is a member of.
             ``reduction_level``
+                Specific numeric reduction level to select on.
                 ``0`` for raw and ``91`` for reduced data.
             ``empty_target_name``
                 `True` selects only frames whose target name is blank. This
@@ -434,7 +439,7 @@ class LcoArchiveClass(QueryWithLogin):
                 # Time accepts a Time, a datetime, or anything else it can
                 # parse; strings are passed through as the user wrote them.
                 value = Time(value).isot
-            elif key in ('public', 'exclude_calibrations'):
+            elif key in ('public', 'exclude_calibrations', 'processed'):
                 value = 'true' if value else 'false'
             elif key == 'exposure_time' and isinstance(value, u.Quantity):
                 value = value.to(u.s).value
